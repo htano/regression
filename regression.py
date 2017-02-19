@@ -1,7 +1,11 @@
 #!/Users/htano/.pyenv/versions/3.5.0/bin/python3
+import math
 import numpy as np
 
-def cal_sum_of_square_deviation(list, average):
+def get_average(list):
+    return sum(list)/len(list)
+
+def calc_sum_of_square_deviation(list, average):
     sum_of_square_deviation = 0
     for val in list:
         sum_of_square_deviation += (val - average) ** 2
@@ -13,8 +17,8 @@ if __name__ == '__main__':
     sales_num   = [77, 62, 93, 84, 59, 64, 80, 75, 58, 91, 51, 73, 65, 84]
 
     # 平均 average
-    temp_ave = sum(temperature) / len(temperature)
-    sales_ave  = sum(sales_num) / len(sales_num)
+    temp_ave = get_average(temperature)
+    sales_ave  = get_average(sales_num)
 
     # 共分散 covariance
     deviation_sum = 0
@@ -31,11 +35,42 @@ if __name__ == '__main__':
 
     # 偏差平方和 sum of square deviation
     # Sxx : temp_sum_of_square_deviation, Syy : sales_sum_of_square_deviation
-    temp_sum_of_square_deviation = cal_sum_of_square_deviation(temperature, temp_ave)
-    sales_sum_of_square_deviation = cal_sum_of_square_deviation(sales_num, sales_ave)
+    temp_sum_of_square_deviation = calc_sum_of_square_deviation(temperature, temp_ave)
+    sales_sum_of_square_deviation = calc_sum_of_square_deviation(sales_num, sales_ave)
     # 偏差積和 sum of products of deviation
     # Sxy : deviation_sum
 
     # a = Sxy / Sxx, b = ave_y - ave_x * a
     a = deviation_sum / temp_sum_of_square_deviation
     b = sales_ave - temp_ave * a
+
+    predict_sales_num = []
+    for i in range(len(temperature)):
+        predict_sales_num.append(a * temperature[i] + b)
+    predict_sales_ave = get_average(predict_sales_num)
+
+    # 偏差平方和 sum of square deviation
+    # Sy^y^
+    predict_sales_sum_of_square_deviation = \
+        calc_sum_of_square_deviation(predict_sales_num, predict_sales_ave)
+
+    # 偏差積和 sum of products of deviation
+    # Syy^ : Sy-y_
+    Sy_y_ = 0
+    for i in range(len(sales_num)):
+        Sy_y_ += (sales_num[i] - sales_ave) * (predict_sales_num[i] - predict_sales_ave)
+
+    Se = 0
+    for i in range(len(sales_num)):
+        Se += (sales_num[i] - predict_sales_num[i]) ** 2
+
+    # 重相関係数 multiple correlation coefficient
+    # R = Syy^ / sqrt(Syy * Sy^y^)
+    R = Sy_y_ / math.sqrt(sales_sum_of_square_deviation * predict_sales_sum_of_square_deviation)
+    # 寄与率 contribution ratio
+    RR = R ** 2
+
+    # RR = (a * Sxy)/Syy
+    #print ((a * deviation_sum)/sales_sum_of_square_deviation)
+    # RR = (1- Se/Syy)
+    #print (1 - (Se/sales_sum_of_square_deviation))
