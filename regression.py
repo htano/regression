@@ -95,3 +95,10 @@ if __name__ == '__main__':
     section = math.sqrt(4.7 * \
         ((1/len(temperature) + (31 - temp_ave)**2 / temp_sum_of_square_deviation) * \
         Se/(len(temperature) - 2 )))
+
+    # 推定
+    # 気温 27度 信頼率 95% における予測区間の算出
+    # F(1, 14-2;0.05) = 4.7
+    predicted_section = math.sqrt(4.7 * \
+        (1 + 1/len(temperature) + (27 - temp_ave) ** 2 / temp_sum_of_square_deviation) * \
+        Se / (len(temperature) - 2))
