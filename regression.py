@@ -89,3 +89,9 @@ if __name__ == '__main__':
 
     # F分布からPを求める
     # 保留
+
+    # 気温 31度 信頼率 95% における信頼区間の算出
+    # F(1, 14-2;0.05) = 4.7
+    section = math.sqrt(4.7 * \
+        ((1/len(temperature) + (31 - temp_ave)**2 / temp_sum_of_square_deviation) * \
+        Se/(len(temperature) - 2 )))
