@@ -1,7 +1,7 @@
 #!/Users/htano/.pyenv/versions/3.5.0/bin/python3
 import math
 import numpy as np
-
+from scipy  import integrate
 def get_average(list):
     return sum(list)/len(list)
 
@@ -10,7 +10,6 @@ def calc_sum_of_square_deviation(list, average):
     for val in list:
         sum_of_square_deviation += (val - average) ** 2
     return sum_of_square_deviation
-
 
 if __name__ == '__main__':
     temperature = [29, 28, 34, 31, 25, 29, 32, 31, 24, 33, 25, 31, 26, 30]
@@ -74,3 +73,19 @@ if __name__ == '__main__':
     #print ((a * deviation_sum)/sales_sum_of_square_deviation)
     # RR = (1- Se/Syy)
     #print (1 - (Se/sales_sum_of_square_deviation))
+
+    # 回帰係数の検定
+    # 母回帰 y = Ax + B
+    A = a
+    B = b
+    sigma = math.sqrt(Se/(len(temperature)-2))
+
+    # 有意水準 significance level
+    significance_level = 0.05
+
+    # 回帰係数の検定
+    approval_val = \
+        (a ** 2)/(1/temp_sum_of_square_deviation) / (Se/(len(temperature) - 2))
+
+    # F分布からPを求める
+    # 保留
