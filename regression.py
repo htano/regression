@@ -2,6 +2,7 @@
 import math
 import numpy as np
 from scipy  import integrate
+
 def get_average(list):
     return sum(list)/len(list)
 
